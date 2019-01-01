@@ -1,26 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+const TodoItem = ({text}) => (<li>{text}</li>)
+
 class App extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      newTodo: '', 
+      todos: []
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    const todos = [...this.state.todos, this.state.newTodo]
+    this.setState({todos, newTodo: ''});
+  }
+
   render() {
+    const {newTodo} = this.state;
+    const todos = this.state.todos.map((t,i)=> (<TodoItem key={i} text={t}/>))
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className='app'>      
+        <h1>ToDoApp</h1>
+        <form onSubmit={this.handleSubmit}>
+          <input 
+            className="todo-input"
+            type="text" 
+            name="newTodo"
+            value={newTodo}
+            onChange={(e) => this.setState({[e.target.name]: e.target.value})} 
+            placeholder='What needs to be done?'>
+          </input>
+          <button
+            type="submit"
+            className="save-button"
           >
-            Learn React
-          </a>
-        </header>
+          SAVE
+          </button>
+        </form>
+        <div className="todo-content">
+          <ol>
+            {todos}
+          </ol>
+        </div>
       </div>
+
     );
   }
 }
